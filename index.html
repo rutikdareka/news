@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News wibes</title>
+    <style>
+      .heading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      button {
+        padding: 8px;
+        font-family: Arial, Helvetica, sans-serif;
+        border: none;
+        border: 1px solid #424245;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      img {
+        height: 400px;
+      }
+
+      #newsarea {
+        display: block;
+        margin: 0px auto;
+        width: 600px;
+        margin-top: 30px;
+        margin-bottom: 50px;
+      }
+
+      .article {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 500px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="heading">
+      <h1>News wibes</h1>
+      <div style="display: flex; gap: 1rem">
+        <button title="business" onclick="fetchNews('business')">
+          Business
+        </button>
+        <button title="entertainment" onclick="fetchNews('entertainment')">
+          Entertainment
+        </button>
+        <button title="general" onclick="fetchNews('general')">General</button>
+        <button title="health" onclick="fetchNews('health')">Health</button>
+        <button title="science" onclick="fetchNews('science')">Science</button>
+        <button title="sports" onclick="fetchNews('sports')">Sports</button>
+      </div>
+    </div>
+    <div id="newsarea"></div>
+
+    <script>
+      async function fetchNews(category = "general") {
+        const apiUrl = `https://saurav.tech/NewsAPI/top-headlines/category/${category}/in.json`;
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          console.log(data);
+          displayNews(data.articles);
+        } catch (error) {
+          console.error("Error fetching news:", error);
+        }
+      }
+
+      function displayNews(articles) {
+        const newsContainer = document.getElementById("newsarea");
+        newsContainer.innerHTML = ""; // Clear previous news
+
+        articles.forEach((article) => {
+          const articleElement = document.createElement("div");
+          articleElement.classList.add("article");
+
+          const title = document.createElement("h2");
+          title.textContent = article.title;
+
+          const image = document.createElement("img");
+          image.src = article.urlToImage;
+          image.alt = article.title;
+
+          const description = document.createElement("p");
+          description.textContent = article.description;
+
+          const source = document.createElement("a");
+          source.textContent = "Read more";
+          source.href = article.url;
+          source.target = "_blank";
+
+          articleElement.setAttribute("title", article.description);
+
+          articleElement.appendChild(title);
+          articleElement.appendChild(image);
+          articleElement.appendChild(description);
+          articleElement.appendChild(source);
+
+          newsContainer.appendChild(articleElement);
+        });
+      }
+
+      fetchNews("general");
+    </script>
+  </body>
+</html>
