@@ -3,111 +3,499 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>News wibes</title>
+    <title>Any Category latest news</title>
     <style>
-      .heading {
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      img {
+        width: 100%;
+      }
+      .news_container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        font-family: Arial, Helvetica, sans-serif;
       }
-      button {
-        padding: 8px;
-        font-family: Arial, Helvetica, sans-serif;
-        border: none;
-        border: 1px solid #424245;
-        border-radius: 10px;
+
+      .news_sub_container {
+        width: 600px;
+      }
+      .top_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        background: white;
+        position: sticky;
+        top: 0px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        backdrop-filter: blur(28.5px);
+      }
+
+      .top_header h1 {
+        padding-left: 20px;
+      }
+
+      select {
+        height: 32px;
+        font-size: 18px;
+        margin-right: 20px;
+      }
+
+      .body_content {
+        width: 100%;
+      }
+
+      #wrapper_body {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .drop_right_down {
+        visibility: hidden;
+        position: fixed;
+        width: 250px;
+        right: 0px;
+        top: 0px;
+        height: 100%;
+        background: white;
+        z-index: 1;
+        animation: back 0.7s forwards;
+      }
+
+      .drop_right_wrapped {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .all_category {
+        height: 100%;
+        overflow-y: scroll;
+      }
+
+      @keyframes back {
+        from {
+          transform: translateX(100%);
+        }
+        to {
+          transform: translateX(0);
+        }
+      }
+
+      strong {
+        display: block;
+        text-align: end;
+      }
+
+      .same_take {
+        padding: 10px;
+        border: 1px solid #e5e5e5;
+      }
+
+      #humburger_menu {
+        display: none;
+      }
+
+      .set_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-bottom: 1px solid #4444;
+      }
+
+      .set_header span {
+        font-size: 28px;
+        padding: 3px 11px;
+        border: 1px solid #4444;
+        border-radius: 50%;
         cursor: pointer;
       }
 
-      img {
-        height: 400px;
+      .set_header h1 {
+        padding-right: 13px;
       }
 
-      #newsarea {
-        display: block;
-        margin: 0px auto;
-        width: 600px;
-        margin-top: 30px;
-        margin-bottom: 50px;
-      }
-
-      .article {
+      ul {
+        list-style: none;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 500px;
-        font-family: Arial, Helvetica, sans-serif;
+        gap: 1rem;
+        padding: 13px;
+      }
+
+      li {
+        padding: 10px 28px;
+        cursor: pointer;
+      }
+
+      li:hover {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      .skeleton-loader {
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .loader-title,
+      .loader-image,
+      .loader-description {
+        animation: pulse 1.5s infinite alternate; /* Continuous animation */
+        background-color: #f0f0f0;
+        margin-bottom: 10px;
+      }
+
+      .loader-title {
+        width: 70%;
+        height: 20px;
+      }
+
+      .loader-image {
+        width: 100%;
+        height: 200px;
+      }
+
+      .loader-description {
+        width: 90%;
+        height: 100px;
+      }
+
+      @keyframes pulse {
+        from {
+          opacity: 0.4;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media only screen and (max-width: 640px) {
+        img {
+          height: 220px;
+        }
+
+        .news_sub_container {
+          width: 450px;
+        }
+
+        select {
+          display: none;
+        }
+
+        #humburger_menu {
+          display: block;
+          padding-right: 20px;
+        }
+      }
+
+      @media only screen and (max-width: 480px) {
+        .news_sub_container {
+          width: 350px;
+        }
+      }
+
+      @media only screen and (max-width: 390px) {
+        .news_sub_container {
+          width: 300px;
+        }
+      }
+
+      @media only screen and (max-width: 328px) {
+        .news_sub_container {
+          width: 260px;
+        }
+      }
+
+      @media only screen and (max-width: 290px) {
+        .news_sub_container {
+          width: 230px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="heading">
-      <h1>News wibes</h1>
-      <div style="display: flex; gap: 1rem">
-        <button title="business" onclick="fetchNews('business')">
-          Business
-        </button>
-        <button title="entertainment" onclick="fetchNews('entertainment')">
-          Entertainment
-        </button>
-        <button title="general" onclick="fetchNews('general')">General</button>
-        <button title="health" onclick="fetchNews('health')">Health</button>
-        <button title="science" onclick="fetchNews('science')">Science</button>
-        <button title="sports" onclick="fetchNews('sports')">Sports</button>
+    <div class="news_container">
+      <div class="news_sub_container">
+        <div class="top_header">
+          <h1>News</h1>
+          <select id="categorySelect">
+            <option value="latest_news" onclick="load()">Latest news</option>
+            <option value="politics">Politics</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="market">Market</option>
+            <option value="personal-finance">personal-finance</option>
+            <option value="economy">Economy</option>
+            <option value="business">Business</option>
+            <option value="india">India</option>
+            <option value="world">World</option>
+            <option value="technology">Technology</option>
+            <option value="retail">Retail</option>
+            <option value="travel">Travel</option>
+            <option value="education">Education & Careers</option>
+            <option value="sports">Sports</option>
+            <option value="startup">startups</option>
+            <option value="real-estate">Real Estate</option>
+            <option value="business_awards">Business Awards</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="lifestyle">Lifestyle</option>
+          </select>
+          <span onclick="open_menu()" id="humburger_menu">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              x="0px"
+              y="0px"
+              width="24"
+              height="24"
+              viewBox="0 0 50 50"
+              style="cursor: pointer"
+            >
+              <path
+                d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"
+              ></path>
+            </svg>
+          </span>
+        </div>
+        <div class="body_content">
+          <div id="wrapper_body">
+            <div class="skeleton-loader">
+              <p class="loader-title"></p>
+              <p class="loader-image"></p>
+              <p class="loader-description"></p>
+            </div>
+            <div class="skeleton-loader">
+              <p class="loader-title"></p>
+              <p class="loader-image"></p>
+              <p class="loader-description"></p>
+            </div>
+            <div class="skeleton-loader">
+              <p class="loader-title"></p>
+              <p class="loader-image"></p>
+              <p class="loader-description"></p>
+            </div>
+          </div>
+        </div>
+        <div class="drop_right_down">
+          <div class="drop_right_wrapped">
+            <div class="set_header">
+              <span onclick="close_menu()">&times;</span>
+              <h1>Categories</h1>
+            </div>
+            <div class="all_category">
+              <ul>
+                <li onclick="load()">Latest news</li>
+                <li onclick="pass_cat('politics')">Politics</li>
+                <li onclick="pass_cat('entertainment')">Entertainment</li>
+                <li onclick="pass_cat('market')">Market</li>
+                <li onclick="pass_cat('personal-finance')">Personal Finance</li>
+                <li onclick="pass_cat('economy')">Economy</li>
+                <li onclick="pass_cat('business')">Business</li>
+                <li onclick="pass_cat('india')">India</li>
+                <li onclick="pass_cat('world')">World</li>
+                <li onclick="pass_cat('technology')">Technology</li>
+                <li onclick="pass_cat('retail')">Retail</li>
+                <li onclick="pass_cat('travel')">Travel</li>
+                <li onclick="pass_cat('education')">Education & Careers</li>
+                <li onclick="pass_cat('sports')">Sports</li>
+                <li onclick="pass_cat('startup')">Startups</li>
+                <li onclick="pass_cat('real-estate')">Real Estate</li>
+                <li onclick="pass_cat('business_awards')">Business Awards</li>
+                <li onclick="pass_cat('healthcare')">Healthcare</li>
+                <li onclick="pass_cat('lifestyle')">Lifestyle</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="newsarea"></div>
+  </body>
+  <script>
+    function load() {
+      window.location.reload();
+    }
 
-    <script>
-      async function fetchNews(category = "general") {
-        const apiUrl = `https://saurav.tech/NewsAPI/top-headlines/category/${category}/in.json`;
-        try {
-          const response = await fetch(apiUrl);
-          const data = await response.json();
-          console.log(data);
-          displayNews(data.articles);
-        } catch (error) {
-          console.error("Error fetching news:", error);
-        }
-      }
+    function open_menu() {
+      document.getElementsByClassName("drop_right_down")[0].style.visibility =
+        "visible";
 
-      function displayNews(articles) {
-        const newsContainer = document.getElementById("newsarea");
-        newsContainer.innerHTML = ""; // Clear previous news
+      document.body.style.overflow = "hidden";
+    }
 
-        articles.forEach((article) => {
-          const articleElement = document.createElement("div");
-          articleElement.classList.add("article");
+    function close_menu() {
+      document.getElementsByClassName("drop_right_down")[0].style.visibility =
+        "hidden";
+      document.body.style.overflow = "auto";
+    }
 
-          const title = document.createElement("h2");
-          title.textContent = article.title;
+    let get_cat = "latest-news";
 
-          const image = document.createElement("img");
-          image.src = article.urlToImage;
-          image.alt = article.title;
+    let selectedCategory;
+    document
+      .getElementById("categorySelect")
+      .addEventListener("change", function () {
+        selectedCategory = this.value;
+        Attach_news_body();
+      });
+    let api_url = "http://cnbctv18.com/api/v1/";
 
-          const description = document.createElement("p");
-          description.textContent = article.description;
+    async function Attach_news_body() {
+      if (selectedCategory) {
+        let div = document.createElement("div");
 
-          const source = document.createElement("a");
-          source.textContent = "Read more";
-          source.href = article.url;
-          source.target = "_blank";
+        let wrapperBody = document.getElementById("wrapper_body");
+        wrapperBody.innerHTML = ""; // Clear previous content
 
-          articleElement.setAttribute("title", article.description);
+        let valid_c = selectedCategory ? selectedCategory : get_cat;
 
-          articleElement.appendChild(title);
-          articleElement.appendChild(image);
-          articleElement.appendChild(description);
-          articleElement.appendChild(source);
+        let getdata = await fetch(`${api_url}/category/${valid_c}`);
+        let response = await getdata.json();
 
-          newsContainer.appendChild(articleElement);
+        let data = response.result;
+
+        data.forEach((item) => {
+          console.log("checkd", item.creation_date);
+          let dateString = item.creation_date.toString();
+
+          // Extract year, month, day, hours, minutes, and seconds from the string
+          const year = parseInt(dateString.substring(0, 4));
+          const month = parseInt(dateString.substring(4, 6)); // Month in JavaScript is 0-indexed
+          const day = parseInt(dateString.substring(6, 8));
+          const hours = parseInt(dateString.substring(8, 10));
+          const minutes = parseInt(dateString.substring(10, 12));
+
+          // Define an array of month names
+          const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ];
+
+          // Get the month name corresponding to the month number
+          const monthName = monthNames[month]; // Subtracting 1 because month numbers are zero-indexed in JavaScript
+
+          const hoursToMinutesRatio = hours + ":" + minutes;
+          const formatedDate = `${hoursToMinutesRatio}   ${day} ${monthName}, ${year}`;
+
+          let image = document.createElement("img");
+          image.src = item.post_image;
+
+          let p = document.createElement("p");
+          p.innerHTML = "<b>Headline</b>: " + item.headline;
+
+          let span = document.createElement("span");
+          span.innerHTML = "<b>Desc</b>: " + item.intro;
+
+          let strong = document.createElement("strong");
+          strong.innerText = formatedDate;
+
+          let div = document.createElement("div");
+          div.className = "same_take";
+          div.appendChild(p);
+          div.appendChild(image);
+          div.appendChild(span);
+          div.appendChild(strong);
+
+          wrapperBody.appendChild(div);
+        });
+      } else {
+        let div = document.createElement("div");
+
+        div.className = "same_take";
+
+        let wrapperBody = document.getElementById("wrapper_body");
+        wrapperBody.innerHTML = ""; // Clear previous content
+
+        let valid_c = selectedCategory ? selectedCategory : get_cat;
+
+        let getdata = await fetch(`${api_url}/${valid_c}`);
+        let response = await getdata.json();
+
+        let data = response.result;
+
+        data.forEach((item) => {
+          let dateString = item.creation_date.toString();
+
+          // Extract year, month, day, hours, minutes, and seconds from the string
+          const year = parseInt(dateString.substring(0, 4));
+          const month = parseInt(dateString.substring(4, 6)); // Month in JavaScript is 0-indexed
+          const day = parseInt(dateString.substring(6, 8));
+          const hours = parseInt(dateString.substring(8, 10));
+          const minutes = parseInt(dateString.substring(10, 12));
+
+          // Define an array of month names
+          const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ];
+
+          // Get the month name corresponding to the month number
+          const monthName = monthNames[month]; // Subtracting 1 because month numbers are zero-indexed in JavaScript
+
+          const hoursToMinutesRatio = hours + ":" + minutes;
+          const formatedDate = `${hoursToMinutesRatio}   ${day} ${monthName}, ${year}`;
+
+          let img_data = JSON.parse(item.post_image_arr);
+
+          let image = document.createElement("img");
+          image.src = img_data.images.in_featured;
+
+          let p = document.createElement("p");
+          p.innerHTML = "<b>Headline</b>: " + item.headline;
+
+          let strong = document.createElement("strong");
+          strong.innerText = formatedDate;
+
+          let div = document.createElement("div");
+          div.className = "same_take";
+          div.appendChild(image);
+          div.appendChild(p);
+          div.appendChild(strong);
+
+          wrapperBody.appendChild(div);
         });
       }
+    }
 
-      fetchNews("general");
-    </script>
-  </body>
+    function pass_cat(name_cat) {
+      console.log(name_cat);
+      selectedCategory = name_cat;
+      Attach_news_body();
+
+      document.getElementsByClassName("drop_right_down")[0].style.visibility =
+        "hidden";
+      document.body.style.overflow = "auto";
+    }
+
+    document.addEventListener("DOMContentLoaded", (e) => {
+      setTimeout(() => {
+        Attach_news_body();
+      }, 3000);
+    });
+  </script>
 </html>
+
