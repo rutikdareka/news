@@ -461,7 +461,15 @@
           ];
 
           // Get the month name corresponding to the month number
-          const monthName = monthNames[month]; // Subtracting 1 because month numbers are zero-indexed in JavaScript
+                   function getPreviousMonthName(month) {
+    // Adjust month to be zero-indexed for the array lookup
+    // Subtract 1 to get the previous month, handle wrap-around with modulo
+    let previousMonthIndex = (month + 11) % 12;
+    return monthNames[previousMonthIndex];
+}
+
+          // Get the month name corresponding to the month number
+          const monthName = getPreviousMonthName(month); 
 
           const hoursToMinutesRatio = hours + ":" + minutes;
           const formatedDate = `${hoursToMinutesRatio}   ${day} ${monthName}, ${year}`;
